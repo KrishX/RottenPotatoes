@@ -7,11 +7,16 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:format] != nil
-      @movies = Movie.find(:all, :order => params[:format])
-    else
-      @movies = Movie.all
-    end   
+    @all_ratings = Movie.getRatings
+    @selected_ratings = @all_ratings
+    @order = params[:format]   
+   
+    if params[:ratings] != nil
+      @selected_ratings = params[:ratings].keys
+    end
+    
+    @movies = Movie.where("rating" => @selected_ratings).order(@order)
+    @all_ratings = Hash[@all_ratings.map {|x| [x, @selected_ratings.include?(x)]}]
   end
 
   def new
