@@ -13,6 +13,15 @@ class MoviesController < ApplicationController
    
     if params[:ratings] != nil
       @selected_ratings = params[:ratings].keys
+      session["selected_ratings"] = @selected_ratings
+    elsif session["selected_ratings"] != nil
+      @selected_ratings = session["selected_ratings"]
+    end
+    
+    if @order != nil
+      session["index_order"] = @order
+    elsif session["index_order"] != nil
+      @order = session["index_order"]
     end
     
     @movies = Movie.where("rating" => @selected_ratings).order(@order)
